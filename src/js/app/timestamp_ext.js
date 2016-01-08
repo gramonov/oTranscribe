@@ -6,11 +6,11 @@
 oT.timestamp = {
     split: function(hms){
         var a = hms.split(':');
-        var seconds = (+a[0]) * 60 + (+a[1]); 
+        var seconds = (+a[0]) * 60 + (+a[1]);
         return seconds;
     },
     get: function(){
-        // get timestap
+        // get timestamp
         if (!oT.player || !oT.player.getTime) {
             return false;
         }
@@ -19,18 +19,27 @@ oT.timestamp = {
         var seconds = ("0" + Math.floor( time - minutes * 60 ) ).slice(-2);
         return minutes+":"+seconds;
     },
+    seconds: function(){
+        // get timestamp in seconds
+        if (!oT.player || !oT.player.getTime) {
+            return false;
+        }
+        var time = oT.player.getTime();
+        var seconds = Math.floor(time * 10) / 10;
+        return seconds;
+    },
     insert: function(){
         var time = oT.timestamp.get();
         if (time) {
             document.execCommand('insertHTML',false,
-            '<span class="timestamp" contenteditable="false" data-timestamp="' + oT.timestamp.get() + '" >' + oT.timestamp.get() + '</span>&nbsp;'
+            '<span class="timestamp" contenteditable="true" data-timestamp="' + oT.timestamp.get() + '" >' + oT.timestamp.seconds() + '</span>&nbsp;'
             );
             oT.timestamp.activate();
         }
     },
     activate: function(){
         $('.timestamp').each(function( index ) {
-            $( this )[0].contentEditable = false;
+            $( this )[0].contentEditable = true;
             $( this ).off().click(function(){
                 var time = $( this ).attr('data-timestamp') || $(this).text();
                 oT.player.skipTo( oT.timestamp.split(time) );
@@ -50,6 +59,3 @@ window.ts = {
         }
     }
 }
-
-
-
